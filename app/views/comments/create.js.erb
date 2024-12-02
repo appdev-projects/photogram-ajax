@@ -1,0 +1,7 @@
+console.log("hi")
+var added_comment = $("<%= escape_javascript(render 'comments/comment', comment: @comment) %>");
+
+$("#<%= dom_id(@comment.photo) %>_new_comment_form").before(added_comment).val("");
+added_comment.slideDown();
+
+$("#<%= dom_id(@comment.photo) %>_new_comment_form #comment_body").val("");
