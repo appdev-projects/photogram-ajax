@@ -1,4 +1,4 @@
-<li class="list-group-item">
+<li id="<%= dom_id(comment) %>" class="list-group-item"> <!-- could put id="comment_<%= comment.id %>" as well -->
   <div class="d-flex">
     <div class="flex-shrink-0">
       <%= image_tag comment.author.avatar_image_url, class: "rounded-circle me-2 img-cover img-small" %>
@@ -11,11 +11,12 @@
 
         <div>
           <% if comment.author == current_user %>
-            <%= link_to edit_comment_path(comment), class: "btn btn-link btn-sm text-muted" do %>
+            <%= link_to edit_comment_path(comment), class: "btn btn-link btn-sm text-muted", remote: true do %>
               <i class="fas fa-edit fa-fw"></i>
             <% end %>
 
-            <%= button_to comment, method: :delete, class: "btn btn-link btn-sm text-muted", form_class: "btn btn-sm btn-link" do %>
+            <!--< button_to comment, method: :delete, class: "btn btn-link btn-sm text-muted", form_class: "btn btn-sm btn-link" do >-->
+              <%= button_to comment, method: :delete, class: "btn btn-link btn-sm text-muted", remote: true do %>
               <i class="fas fa-trash fa-fw"></i>
             <% end %>
           <% end %>
@@ -25,3 +26,17 @@
     </div>
   </div> 
 </li>
+
+<script>
+  // bind the click handler
+  $("#comment_<%= comment.id %>_delete_link").on("click", function() { 
+    
+    $.ajax({
+      url: "/comments/<%= comment.id %>", // what URL to submit a request to
+      type: "DELETE",                     // make it a DELETE request
+      dataType: "script"                  // what is the format of the request
+    });
+
+    return false;                         // break the link
+  });
+</script>
